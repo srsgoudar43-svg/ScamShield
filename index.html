@@ -247,8 +247,8 @@
     // --- Main Single-File Application Component ---
     function ScamShieldApp() {
       const [activeTab, setActiveTab] = useState('home');
-      const [searchQuery, setSearchQuery] = useState('9876543210');
-      const [searchResult, setSearchResult] = useState(INITIAL_RECORDS[0]);
+      const [searchQuery, setSearchQuery] = useState('');
+      const [searchResult, setSearchResult] = useState(null);
       const [isScanning, setIsScanning] = useState(false);
       const [searchError, setSearchError] = useState('');
       const [records, setRecords] = useState(() => {
@@ -279,7 +279,9 @@
 
       const handleSearch = (raw) => {
         setSearchError('');
-        const val = validateIndianNumber(raw || searchQuery);
+        const target = (raw !== undefined && raw !== null && String(raw).trim() !== '') ? String(raw).trim() : searchQuery;
+        if (raw) setSearchQuery(target);
+        const val = validateIndianNumber(target);
         if (!val.isValid) {
           setSearchError(val.error);
           return;
@@ -479,9 +481,9 @@
                     <input
                       type="text"
                       value={searchQuery}
-                      onChange={e => setSearchQuery(e.target.value)}
-                      placeholder="Enter 10-digit number (e.g. 98765 43210)"
-                      className="flex-1 bg-transparent px-3 py-2 text-white font-mono text-base focus:outline-none"
+                      onChange={e => { setSearchQuery(e.target.value); if (searchError) setSearchError(''); }}
+                      placeholder="e.g. 98765 43210 (Enter 10-digit mobile number)"
+                      className="flex-1 bg-transparent px-3 py-2 text-white font-mono text-base focus:outline-none placeholder-slate-500"
                     />
                     <button
                       onClick={() => handleSearch(searchQuery)}
@@ -554,21 +556,26 @@
             {/* Check Number Tab */}
             {activeTab === 'check' && (
               <div className="max-w-4xl mx-auto space-y-6">
-                <div className="glass-panel-cyan p-4 rounded-2xl flex flex-col sm:flex-row gap-2">
+                <div className="glass-panel-cyan p-2.5 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <div className="flex items-center pl-3 pr-2 text-slate-300 font-mono font-semibold text-sm border-r border-slate-700">
+                    <span className="text-cyan-400 mr-2"><IconPhone /></span>
+                    <span>+91</span>
+                  </div>
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="Enter 10-digit Indian phone number..."
-                    className="flex-1 bg-transparent px-3 py-2 text-white font-mono text-base focus:outline-none"
+                    onChange={e => { setSearchQuery(e.target.value); if (searchError) setSearchError(''); }}
+                    placeholder="e.g. 98765 43210 (Enter 10-digit mobile number)"
+                    className="flex-1 bg-transparent px-3 py-2 text-white placeholder-slate-500 font-mono text-base focus:outline-none"
                   />
                   <button
                     onClick={() => handleSearch(searchQuery)}
-                    className="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs uppercase tracking-wider glow-cyan-sm"
+                    className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider glow-cyan-sm transition-all"
                   >
                     Verify Risk
                   </button>
                 </div>
+                {searchError && <div className="text-xs text-red-400">{searchError}</div>}
 
                 {isScanning ? (
                   <div className="text-center py-16 space-y-4">
@@ -578,7 +585,7 @@
                     </div>
                     <div className="text-cyan-300 font-mono text-xs">QUERYING NATIONAL TELEMETRY: +91 {searchQuery}</div>
                   </div>
-                ) : searchResult && (
+                ) : searchResult ? (
                   <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6">
                     <div className="flex flex-col sm:flex-row justify-between gap-4 pb-4 border-b border-slate-800">
                       <div>
@@ -636,6 +643,32 @@
                       ) : (
                         <div className="text-xs text-slate-400 py-3">No citizen incident reports logged for this number.</div>
                       )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="glass-panel p-8 rounded-2xl text-center space-y-4">
+                    <div className="w-14 h-14 mx-auto rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                      <IconShield className="w-7 h-7" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-bold text-white">Check Any Indian Phone Number</h3>
+                      <p className="text-xs text-slate-400 max-w-md mx-auto">
+                        Enter a 10-digit mobile number above (e.g. 98765 43210) to inspect real-time fraud probability, telecom circle routing, and 1930 police complaint draft.
+                      </p>
+                    </div>
+                    <div className="pt-2">
+                      <div className="text-[11px] font-mono uppercase text-slate-500 mb-2">Or verify a verified sample threat:</div>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {PRESETS.map(p => (
+                          <button
+                            key={p.num}
+                            onClick={() => { setSearchQuery(p.num); handleSearch(p.num); }}
+                            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-400 text-xs font-mono text-slate-300 hover:text-cyan-300 transition-colors"
+                          >
+                            {p.label} (+91 {p.num})
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}

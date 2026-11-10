@@ -36,16 +36,16 @@ export default function CheckNumberPage() {
     searchHistory 
   } = useScam();
 
-  const [inputNumber, setInputNumber] = useState(activeSearchNumber || '9876543210');
+  const [inputNumber, setInputNumber] = useState(activeSearchNumber || '');
   const [copied, setCopied] = useState(false);
   const [showDraftModal, setShowDraftModal] = useState(false);
 
-  // If page opens without a search result, run the initial check on default demo number
+  // If navigated with activeSearchNumber, check it
   useEffect(() => {
-    if (!searchResult && !isScanning) {
-      checkNumber(inputNumber || '9876543210', false);
+    if (activeSearchNumber && !searchResult && !isScanning) {
+      checkNumber(activeSearchNumber, false);
     }
-  }, []);
+  }, [activeSearchNumber]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -383,6 +383,21 @@ export default function CheckNumberPage() {
             </div>
           )}
 
+        </div>
+      )}
+
+      {/* Empty State when no query has been verified */}
+      {!isScanning && !searchResult && (
+        <div className="max-w-3xl mx-auto glass-panel p-8 rounded-2xl text-center space-y-4">
+          <div className="w-14 h-14 mx-auto rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <ShieldAlert className="w-7 h-7" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-lg font-bold text-white">Enter a Number to Begin Verification</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              Provide an Indian mobile number above (e.g. 98765 43210) to cross-reference telecom carrier routing, community risk index, and cyber police complaint drafts.
+            </p>
+          </div>
         </div>
       )}
 
