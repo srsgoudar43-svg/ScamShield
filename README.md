@@ -1,5 +1,7 @@
 # ScamShield — Indian Phone Fraud & Scam Number Defense Platform
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsrsgoudar43-svg%2FScamShield&env=GEMINI_API_KEY,SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY,SUPABASE_ANON_KEY)
+
 **ScamShield** is a cybersecurity web application tailored for Indian citizens to proactively detect, assess, and report fraudulent telephone numbers and suspicious calls.
 
 ---
