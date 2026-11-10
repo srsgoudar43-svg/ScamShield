@@ -22,6 +22,7 @@ import { useScam } from '../../context/ScamContext';
 import { DEMO_PRESET_NUMBERS } from '../../data/demoData';
 import RiskGauge from './RiskGauge';
 import RadarScanner from './RadarScanner';
+import PoliceDraftModal from './PoliceDraftModal';
 
 export default function CheckNumberPage() {
   const { 
@@ -37,6 +38,7 @@ export default function CheckNumberPage() {
 
   const [inputNumber, setInputNumber] = useState(activeSearchNumber || '9876543210');
   const [copied, setCopied] = useState(false);
+  const [showDraftModal, setShowDraftModal] = useState(false);
 
   // If page opens without a search result, run the initial check on default demo number
   useEffect(() => {
@@ -187,7 +189,15 @@ export default function CheckNumberPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => setShowDraftModal(true)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-950/50 hover:bg-blue-900/50 border border-blue-500/30 text-xs text-blue-200 transition-colors"
+                  title="Generate official cybercrime police complaint narrative"
+                >
+                  <FileText className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Police/1930 Draft</span>
+                </button>
                 <button
                   onClick={handleCopy}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-200 transition-colors"
