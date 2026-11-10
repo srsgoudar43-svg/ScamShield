@@ -1,0 +1,29 @@
+{
+  "name": "scamshield-workspace",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "ScamShield - Phone Fraud and Scam Number Detection Platform for Indian Citizens",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "build": "npm run build --prefix frontend",
+    "preview": "npm run preview --prefix frontend",
+    "db:migrate": "node scripts/apply-migration.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "dotenv": "^16.4.7",
+    "pg": "^8.13.3"
+  },
+  "keywords": [
+    "scam-detector",
+    "phone-security",
+    "cybersecurity",
+    "india",
+    "1930-helpline",
+    "supabase"
+  ],
+  "author": "ScamShield Team",
+  "license": "MIT"
+}
