@@ -8,7 +8,8 @@ import {
   Menu, 
   X, 
   RotateCcw,
-  Sparkles
+  Sparkles,
+  Bot
 } from 'lucide-react';
 import { useScam } from '../../context/ScamContext';
 
@@ -19,6 +20,7 @@ export default function Navbar() {
   const navLinks = [
     { id: 'home', label: 'Home', icon: Sparkles },
     { id: 'check', label: 'Check Number', icon: Search },
+    { id: 'ai', label: 'AI Scanner', icon: Bot },
     { id: 'report', label: 'Report Scam', icon: Flag },
     { id: 'about', label: 'About', icon: Info },
   ];

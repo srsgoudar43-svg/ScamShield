@@ -5,6 +5,7 @@ import DemoBanner from './components/common/DemoBanner';
 import Footer from './components/common/Footer';
 import HomePage from './components/home/HomePage';
 import CheckNumberPage from './components/check/CheckNumberPage';
+import AiMessageAnalyzer from './components/ai/AiMessageAnalyzer';
 import ReportScamPage from './components/report/ReportScamPage';
 import AboutPage from './components/about/AboutPage';
 
@@ -23,6 +24,7 @@ function AppContent() {
       <main className="flex-1">
         {activeTab === 'home' && <HomePage />}
         {activeTab === 'check' && <CheckNumberPage />}
+        {activeTab === 'ai' && <AiMessageAnalyzer />}
         {activeTab === 'report' && <ReportScamPage />}
         {activeTab === 'about' && <AboutPage />}
       </main>

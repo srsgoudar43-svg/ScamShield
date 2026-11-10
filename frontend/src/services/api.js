@@ -1,5 +1,6 @@
-// API Service layer connecting ScamShield Frontend to Express Backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// API Service layer connecting ScamShield Frontend to Backend / Vercel Serverless Function
+const isLocalDev = typeof window !== 'undefined' && window.location.hostname === 'localhost' && window.location.port === '5173';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (isLocalDev ? 'http://localhost:5000/api' : '/api');
 
 /**
  * Searches a number from the backend REST API
@@ -57,3 +58,46 @@ export async function fetchStatsAPI() {
   }
 }
 
+/**
+ * Analyzes suspicious text with Gemini AI via backend endpoint
+ */
+export async function analyzeMessageAPI(text) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/ai/analyze`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || `HTTP error ${res.status}`);
+    }
+    return data;
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Chats with the ScamShield AI Cyber Assistant
+ */
+export async function chatWithAIAPI(question) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/ai/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ question })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || `HTTP error ${res.status}`);
+    }
+    return data;
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
