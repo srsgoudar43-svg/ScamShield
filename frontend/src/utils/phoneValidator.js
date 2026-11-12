@@ -141,11 +141,12 @@ export function inferTruecallerProfile(digits = '') {
       location: 'India',
       city: 'National',
       state: 'India',
-      profilePic: REALISTIC_PORTRAITS[0],
+      profilePic: null,
       callerType: 'Mobile Subscriber',
-      isVerified: true,
-      truecallerTag: 'Identified by Truecaller Community',
-      searchCount: 42
+      isVerified: false,
+      isUnlisted: true,
+      truecallerTag: 'Standard Telecom Line',
+      searchCount: 1
     };
   }
 
@@ -155,13 +156,11 @@ export function inferTruecallerProfile(digits = '') {
   }
   hash = Math.abs(hash);
 
-  const fn = INDIAN_FIRST_NAMES[hash % INDIAN_FIRST_NAMES.length];
-  const ln = INDIAN_LAST_NAMES[(Math.floor(hash / 5)) % INDIAN_LAST_NAMES.length];
   const loc = INDIAN_LOCATIONS[(Math.floor(hash / 11)) % INDIAN_LOCATIONS.length];
   const carrierObj = INDIAN_OPERATORS[(Math.floor(hash / 17)) % INDIAN_OPERATORS.length];
 
   return {
-    callerName: `${fn} ${ln}`,
+    callerName: `Mobile Subscriber (+91 ${clean.slice(0, 5)} ${clean.slice(5)})`,
     carrier: carrierObj.name,
     simNetwork: carrierObj.network,
     simType: carrierObj.simType,
@@ -169,11 +168,12 @@ export function inferTruecallerProfile(digits = '') {
     location: `${loc.city}, ${loc.state}, India`,
     city: loc.city,
     state: loc.state,
-    profilePic: REALISTIC_PORTRAITS[hash % REALISTIC_PORTRAITS.length],
-    callerType: (hash % 3 === 0) ? 'Personal Mobile' : (hash % 3 === 1) ? 'Verified Individual' : 'Mobile Subscriber',
-    isVerified: true,
-    truecallerTag: 'Identified by Truecaller Community',
-    searchCount: 15 + (hash % 240)
+    profilePic: null,
+    callerType: 'Personal Mobile Line',
+    isVerified: false,
+    isUnlisted: true,
+    truecallerTag: 'Standard Telecom Line • Truecaller account required for live private identity',
+    searchCount: 1
   };
 }
 
