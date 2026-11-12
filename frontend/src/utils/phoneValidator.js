@@ -72,24 +72,117 @@ export function formatIndianNumber(digits = '') {
   return `+91 ${clean.slice(0, 5)} ${clean.slice(5)}`;
 }
 
+// Realistic Indian Telecom Circles and Cities for Truecaller reverse lookup
+const INDIAN_LOCATIONS = [
+  { city: 'Bengaluru', circle: 'Karnataka', state: 'Karnataka' },
+  { city: 'Mumbai', circle: 'Mumbai Metro', state: 'Maharashtra' },
+  { city: 'New Delhi', circle: 'Delhi NCR', state: 'Delhi' },
+  { city: 'Hyderabad', circle: 'Telangana', state: 'Telangana' },
+  { city: 'Pune', circle: 'Maharashtra & Goa', state: 'Maharashtra' },
+  { city: 'Chennai', circle: 'Tamil Nadu', state: 'Tamil Nadu' },
+  { city: 'Kolkata', circle: 'West Bengal', state: 'West Bengal' },
+  { city: 'Ahmedabad', circle: 'Gujarat', state: 'Gujarat' },
+  { city: 'Lucknow', circle: 'Uttar Pradesh (East)', state: 'Uttar Pradesh' },
+  { city: 'Noida', circle: 'Uttar Pradesh (West)', state: 'Uttar Pradesh' },
+  { city: 'Jaipur', circle: 'Rajasthan', state: 'Rajasthan' },
+  { city: 'Chandigarh', circle: 'Punjab', state: 'Punjab' },
+  { city: 'Kochi', circle: 'Kerala', state: 'Kerala' },
+  { city: 'Indore', circle: 'Madhya Pradesh', state: 'Madhya Pradesh' }
+];
+
+const INDIAN_OPERATORS = [
+  { name: 'Reliance Jio', network: 'Jio True 5G / VoLTE', simType: 'Prepaid SIM' },
+  { name: 'Bharti Airtel', network: 'Airtel 5G Plus', simType: 'Prepaid SIM' },
+  { name: 'Vodafone Idea (Vi)', network: 'Vi GIGAnet 4G', simType: 'Prepaid SIM' },
+  { name: 'Bharti Airtel', network: 'Airtel 5G Plus', simType: 'Postpaid Corporate SIM' },
+  { name: 'Reliance Jio', network: 'Jio True 5G', simType: 'Postpaid SIM' },
+  { name: 'BSNL Mobile', network: 'BSNL 4G VoLTE', simType: 'Prepaid SIM' }
+];
+
+const INDIAN_FIRST_NAMES = [
+  'Rajesh', 'Priya', 'Amit', 'Sneha', 'Vikram', 'Pooja', 'Rahul', 'Ananya',
+  'Suresh', 'Kavita', 'Rohan', 'Divya', 'Deepak', 'Neha', 'Arjun', 'Sunita',
+  'Manoj', 'Swati', 'Sanjay', 'Meera', 'Ramesh', 'Aakash', 'Shweta', 'Naveen'
+];
+
+const INDIAN_LAST_NAMES = [
+  'Sharma', 'Verma', 'Patel', 'Singh', 'Kumar', 'Reddy', 'Rao', 'Gupta',
+  'Deshmukh', 'Nair', 'Mehta', 'Joshi', 'Choudhury', 'Bhatt', 'Kulkarni', 'Iyer',
+  'Mishra', 'Gowda', 'Banerjee', 'Patil'
+];
+
+const REALISTIC_PORTRAITS = [
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1548142813-c348350df52b?w=300&auto=format&fit=crop&q=80'
+];
+
+/**
+ * Generates deterministic telecom circle, carrier and realistic Truecaller profile
+ */
+export function inferTruecallerProfile(digits = '') {
+  const clean = normalizeIndianNumber(digits);
+  if (clean.length !== 10) {
+    return {
+      callerName: 'Standard Subscriber Line',
+      carrier: 'Indian Telecom',
+      simNetwork: '4G VoLTE',
+      simType: 'Prepaid SIM',
+      circle: 'National',
+      location: 'India',
+      city: 'National',
+      state: 'India',
+      profilePic: REALISTIC_PORTRAITS[0],
+      callerType: 'Mobile Subscriber',
+      isVerified: true,
+      truecallerTag: 'Identified by Truecaller Community',
+      searchCount: 42
+    };
+  }
+
+  let hash = 0;
+  for (let i = 0; i < clean.length; i++) {
+    hash = (hash * 31 + clean.charCodeAt(i)) & 0xffffffff;
+  }
+  hash = Math.abs(hash);
+
+  const fn = INDIAN_FIRST_NAMES[hash % INDIAN_FIRST_NAMES.length];
+  const ln = INDIAN_LAST_NAMES[(Math.floor(hash / 5)) % INDIAN_LAST_NAMES.length];
+  const loc = INDIAN_LOCATIONS[(Math.floor(hash / 11)) % INDIAN_LOCATIONS.length];
+  const carrierObj = INDIAN_OPERATORS[(Math.floor(hash / 17)) % INDIAN_OPERATORS.length];
+
+  return {
+    callerName: `${fn} ${ln}`,
+    carrier: carrierObj.name,
+    simNetwork: carrierObj.network,
+    simType: carrierObj.simType,
+    circle: loc.circle,
+    location: `${loc.city}, ${loc.state}, India`,
+    city: loc.city,
+    state: loc.state,
+    profilePic: REALISTIC_PORTRAITS[hash % REALISTIC_PORTRAITS.length],
+    callerType: (hash % 3 === 0) ? 'Personal Mobile' : (hash % 3 === 1) ? 'Verified Individual' : 'Mobile Subscriber',
+    isVerified: true,
+    truecallerTag: 'Identified by Truecaller Community',
+    searchCount: 15 + (hash % 240)
+  };
+}
+
 /**
  * Generates deterministic telecom circle and carrier based on phone prefix
  * for realistic demonstration purposes.
  */
 export function inferTelecomInfo(digits = '') {
-  const clean = normalizeIndianNumber(digits);
-  if (clean.length !== 10) {
-    return { carrier: 'Unknown Carrier', circle: 'National' };
-  }
-
-  const prefix = parseInt(clean.slice(0, 4), 10);
-  const carrierIndex = (prefix % INDIAN_CARRIERS.length);
-  const circleIndex = (prefix % INDIAN_TELECOM_CIRCLES.length);
-
-  return {
-    carrier: INDIAN_CARRIERS[carrierIndex],
-    circle: INDIAN_TELECOM_CIRCLES[circleIndex]
-  };
+  return inferTruecallerProfile(digits);
 }
 
 /**

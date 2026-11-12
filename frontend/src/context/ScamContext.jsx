@@ -109,32 +109,51 @@ export function ScamProvider({ children }) {
 
       if (existing) {
         result = {
+          ...telecom,
           ...existing,
           carrier: existing.carrier || telecom.carrier,
           circle: existing.circle || telecom.circle,
+          location: existing.location || telecom.location,
+          simNetwork: existing.simNetwork || telecom.simNetwork,
+          simType: existing.simType || telecom.simType,
+          profilePic: existing.profilePic || telecom.profilePic,
+          callerName: existing.callerName || telecom.callerName,
+          callerType: existing.callerType || telecom.callerType,
+          truecallerTag: existing.truecallerTag || (existing.riskScore >= 75 ? '⚠️ Flagged by Community' : telecom.truecallerTag),
+          isVerified: existing.riskScore >= 75 ? false : true,
           levelInfo: getRiskLevelInfo(existing.riskScore)
         };
       } else {
         // Uncataloged number assessment
-        const defaultScore = 12; // Unrated / Clean baseline
+        const defaultScore = 10; // Unrated / Clean baseline
         result = {
           id: `clean-${digits}`,
           phoneNumber: digits,
           formattedNumber: validation.formatted,
           carrier: telecom.carrier,
+          simNetwork: telecom.simNetwork,
+          simType: telecom.simType,
           circle: telecom.circle,
+          location: telecom.location,
+          city: telecom.city,
+          state: telecom.state,
           riskScore: defaultScore,
           riskLevel: 'SAFE',
-          category: 'unverified',
-          categoryName: 'Unrated / No Complaints Found',
-          callerName: 'Standard Subscriber Line',
+          category: 'clean',
+          categoryName: 'Clean / Identified Subscriber',
+          callerName: telecom.callerName,
+          callerType: telecom.callerType,
+          profilePic: telecom.profilePic,
           reportCount: 0,
           monetaryLossReported: false,
-          lastReported: 'No prior incident records found',
+          isVerified: telecom.isVerified,
+          truecallerTag: telecom.truecallerTag,
+          searchCount: telecom.searchCount,
+          lastReported: 'Never flagged (Clean History)',
           reasons: [
             'Zero fraud complaints registered on the ScamShield demonstration grid.',
             'Normal telecommunication routing signature detected.',
-            'No associated phishing links, SMS spam patterns, or bank impersonation logs.'
+            'High trust score across Indian telecom telemetry.'
           ],
           reports: [],
           levelInfo: getRiskLevelInfo(defaultScore)
